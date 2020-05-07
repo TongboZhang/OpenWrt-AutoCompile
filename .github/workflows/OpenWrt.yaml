@@ -45,9 +45,9 @@ jobs:
 
       - name: Update code
         run: |
-          git remote add openwrt https://github.com/coolsnowwolf/lede.git
-          git pull openwrt master
-          git remote -v
+          git clone https://github.com/coolsnowwolf/lede.git
+          cd lede
+          ls
 
       - name: Update feeds
         run: |
