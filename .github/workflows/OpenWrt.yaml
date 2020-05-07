@@ -15,7 +15,7 @@ jobs:
         with:
           ref: master
 
-      - name: Initialization environment
+      - name: Install environment
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
@@ -43,15 +43,22 @@ jobs:
           sudo -E apt-get -y autoremove --purge
           sudo -E apt-get clean
 
-      - name: Update code
+      - name: Update code 
         run: |
           git clone https://github.com/coolsnowwolf/lede.git
+
+      - name: Install packages 
+        run: |
           cd lede
           ./scripts/feeds update -a
           ./scripts/feeds install -a
+
+      - name: Gene config 
+        run: |
+          cd lede
           rm -f ./.config*
           touch ./.config
-
+          
           # 编译x64固件:
           cat >> .config <<EOF
           CONFIG_TARGET_x86=y
@@ -139,8 +146,8 @@ jobs:
 
           # 取消编译VMware镜像以及镜像填充 (不要删除被缩进的注释符号):
           cat >> .config <<EOF
-          # CONFIG_TARGET_IMAGES_PAD is not set
-          # CONFIG_VMDK_IMAGES is not set
+          CONFIG_TARGET_IMAGES_PAD=y
+          CONFIG_VMDK_IMAGES=y
           EOF
 
           sed -i 's/^[ \t]*//g' ./.config
